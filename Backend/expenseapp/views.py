@@ -30,16 +30,16 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 key="access_token",
                 value = access_token,
                 httponly = True,
-                secure = True,
-                samesite = 'None',
+                secure = False,
+                samesite = 'Lax',
                 path = '/'
             )
             res.set_cookie(
                 key="refresh_token",
                 value = refresh_token,
                 httponly = True,
-                secure = True,
-                samesite = 'None',
+                secure = False,
+                samesite = 'Lax',
                 path = '/'
             )
             return res
@@ -66,8 +66,8 @@ class CustomRefreshTokenView(TokenRefreshView):
                 key="access_token",
                 value = access_token,
                 httponly = True,
-                secure = True,
-                samesite = 'None',
+                secure = False,
+                samesite = 'Lax',
                 path = '/'
             )
             return res
@@ -91,8 +91,8 @@ class Logout(APIView):
         try:
             res= Response()
             res.data = {'success': True}
-            res.delete_cookie('access_token', path='/', samesite='None')
-            res.delete_cookie('refresh_token', path='/', samesite='None')
+            res.delete_cookie('access_token', path='/', samesite='Lax')
+            res.delete_cookie('refresh_token', path='/', samesite='Lax')
             return res
         except:
             return Response({'success': False})
