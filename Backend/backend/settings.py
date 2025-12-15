@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'expenseapp',
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt',
+    'sslserver'
 ]
 
 MIDDLEWARE = [
@@ -52,6 +54,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'expenseapp.authentication.CookiesJWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -75,13 +86,6 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 
 
-CORS_ALLOW_ALL_ORIGINS = True
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-}
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 

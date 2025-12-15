@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class ExpenseModel(models.Model):
-    USER = models.ForeignKey(User, on_delete=models.CASCADE)
+    USER = models.ForeignKey(User, on_delete=models.CASCADE, related_name='expenses')
     title = models.CharField(max_length=100)
     amount = models.IntegerField()
     category = models.CharField(max_length=50)
