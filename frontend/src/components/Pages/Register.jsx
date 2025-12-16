@@ -4,14 +4,16 @@ import { Link } from 'react-router-dom';
 import { login } from '../Services/api.js';
 import { useAuth } from '../contexts/useAuth';
 
-const LoginPage = () => {
+const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const {login_user} = useAuth()
+    const [email, setEmail] = useState('');
+    const [Cpassword, setCpassword] = useState('');
+    const {register_user} = useAuth()
 
-    const handleLogin = (e) => {
+    const handleRegister = (e) => {
         e.preventDefault();
-        login_user(username, password)
+        register_user(username, email, password, Cpassword)
     }
 
 
@@ -22,8 +24,8 @@ const LoginPage = () => {
                     <Card className="shadow-lg border-0 rounded-4">
                         <Card.Body className="p-5">
                             <div className="text-center mb-4">
-                                <h2 className="fw-bold text-primary mb-2">Welcome Back</h2>
-                                <p className="text-muted">Please enter your details to sign in.</p>
+                                <h2 className="fw-bold text-primary mb-2">Welcome to Expense Tracker</h2>
+                                <p className="text-muted">Please enter your details to sign up.</p>
                             </div>
 
                             <Form>
@@ -39,6 +41,18 @@ const LoginPage = () => {
                                     />
                                 </Form.Group>
 
+                                <Form.Group className="mb-3" controlId="formUsername">
+                                    <Form.Label className="fw-semibold">Email</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Enter your Email"
+                                        size="lg"
+                                        className="bg-light border-0"
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        value={email}
+                                    />
+                                </Form.Group>
+
                                 <Form.Group className="mb-4" controlId="formPassword">
                                     <Form.Label className="fw-semibold">Password</Form.Label>
                                     <Form.Control
@@ -51,8 +65,20 @@ const LoginPage = () => {
                                     />
                                 </Form.Group>
 
+                                <Form.Group className="mb-4" controlId="formPassword">
+                                    <Form.Label className="fw-semibold">Confirm Password</Form.Label>
+                                    <Form.Control
+                                        type="password"
+                                        placeholder="Confirm your password"
+                                        size="lg"
+                                        className="bg-light border-0"
+                                        onChange={(e) => setCpassword(e.target.value)}
+                                        value={Cpassword}
+                                    />
+                                </Form.Group>
+
                                 <div className="d-grid gap-2">
-                                    <Button variant="primary" size="lg" type="submit" className="rounded-pill fw-bold shadow-sm" onClick={handleLogin}>
+                                    <Button variant="primary" size="lg" type="submit" className="rounded-pill fw-bold shadow-sm" onClick={handleRegister}>
                                         Sign In
                                     </Button>
                                 </div>
@@ -60,9 +86,9 @@ const LoginPage = () => {
 
                             <div className="text-center mt-4">
                                 <p className="text-muted mb-0">
-                                    Don't have an account?{' '}
-                                    <Link to="/register" className="text-decoration-none fw-bold">
-                                        Sign up
+                                    Already have an account?{' '}
+                                    <Link to="/" className="text-decoration-none fw-bold">
+                                        Sign In
                                     </Link>
                                 </p>
                             </div>
@@ -74,4 +100,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default Register;

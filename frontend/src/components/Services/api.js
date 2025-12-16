@@ -7,6 +7,8 @@ const LOGIN_URL = `${BASE_URL}/token/`
 const REFRESH_URL = `${BASE_URL}/token/refresh/`
 const EXPENSE_URL = `${BASE_URL}/expenses/`
 const LOGOUT_URL = `${BASE_URL}/logout/`
+const AUTH_URL = `${BASE_URL}/authenticated/`
+const REGISTER_URL = `${BASE_URL}/register/`
 
 
 export const login = async (username, password) => {
@@ -64,3 +66,32 @@ export const logout = async () => {
         return false
     }
 }
+
+export const is_authenticated = async () => {
+   try {
+    await axios.post(AUTH_URL,
+        {},
+        { withCredentials: true }
+    )
+    return true
+   } catch (error) {
+    return false
+   }
+}
+
+export const register = async (username, email, password) => {
+  try {
+    const response = await axios.post(
+      REGISTER_URL,
+      {
+        username,
+        email,
+        password,
+      },
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};

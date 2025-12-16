@@ -82,15 +82,7 @@ function ViewExpence() {
     fetchExpenses();
   }, []);
 
-  const handleLogout = async () => {
-    const success = await logout()
-    if (success) {
-        alert("Logout successful")
-      navigate('/')
-    }else{
-        alert("Logout failed")
-    }
-  }
+
 
   if (loading) {
     return (
@@ -141,7 +133,6 @@ function ViewExpence() {
           )}
         </tbody>
       </Table>
-      <Button className="btn btn-danger" onClick={handleLogout}>Logout</Button>
     </div>
   );
 }

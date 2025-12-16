@@ -110,5 +110,14 @@ class RegisterView(APIView):
         ser = UserRegistrationSerializer(data=request.data)
         if ser.is_valid():
             ser.save()
-            return Response(ser.data)
-        return Response(ser.error)
+            return Response(ser.data, status=201)
+        return Response(ser.errors, status=400)
+
+class AddExpense(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        ser = ExpenseSerializer(data=request.data)
+        if ser.is_valid():
+            ser.save()
+            return Response(ser.data, status=201)
+        return Response(ser.errors, status=400)

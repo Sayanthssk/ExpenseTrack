@@ -8,4 +8,5 @@ urlpatterns = [
     path('logout/', Logout.as_view()),
     path('authenticated/', IsAuthenticated.as_view()),
     path('register/', RegisterView.as_view()),
+    path('add-expense/', AddExpense.as_view()),
 ]
