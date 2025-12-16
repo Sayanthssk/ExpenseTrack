@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from django.db.models import Sum
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
 
 from expenseapp.models import *
 from expenseapp.serializers import *
@@ -49,31 +51,41 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 class CustomRefreshTokenView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
+        refresh_token = request.COOKIES.get('refresh_token')
+
+        if not refresh_token:
+            return Response(
+                {'refreshed': False, 'detail': 'Refresh token missing'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        data = request.data.copy()
+        data['refresh'] = refresh_token
+        request._full_data = data 
+
         try:
-            refresh_token = request.COOKIES.get('refresh_token')
-
-            request.data['refresh'] = refresh_token
-
             response = super().post(request, *args, **kwargs)
 
-            tokens = response.data
-            access_token = tokens['access']
+            access_token = response.data.get('access')
 
-            res = Response()
-            res.data = {'refreshed': True}
+            res = Response({'refreshed': True}, status=status.HTTP_200_OK)
 
             res.set_cookie(
-                key="access_token",
-                value = access_token,
-                httponly = True,
-                secure = False,
-                samesite = 'Lax',
-                path = '/'
+                key='access_token',
+                value=access_token,
+                httponly=True,
+                secure=False,     # localhost
+                samesite='Lax',
+                path='/'
             )
+
             return res
 
-        except:
-            return Response({'refreshed': False})
+        except Exception as e:
+            return Response(
+                {'refreshed': False, 'error': str(e)},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
 
 
 
@@ -82,8 +94,34 @@ class ExpenseView(APIView):
     def get(self, request): 
         user = request.user
         expenses = ExpenseModel.objects.filter(USER=user)
+
+        month = request.query_params.get('month')
+        year = request.query_params.get('year')
+
+        if month:
+            expenses = expenses.filter(date__month=month)
+        if year:
+            expenses = expenses.filter(date__year=year)
+            
         serializer = ExpenseSerializer(expenses, many=True)
         return Response(serializer.data)
+
+class ExpenseSummary(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        # Category-wise summary
+        category_summary = ExpenseModel.objects.filter(USER=user).values('category').annotate(total=Sum('amount'))
+        
+        # Total Summary
+        total_expense = ExpenseModel.objects.filter(USER=user).aggregate(Sum('amount'))['amount__sum'] or 0
+        
+        return Response({
+            'category_summary': category_summary,
+            'total_expense': total_expense
+        })
+
 
 
 class Logout(APIView):
@@ -98,8 +136,9 @@ class Logout(APIView):
             return Response({'success': False})
 
 
-class IsAuthenticated(APIView):
+class AuthenticatedView(APIView):
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
         return Response({'authenticated': True})
 
@@ -115,9 +154,10 @@ class RegisterView(APIView):
 
 class AddExpense(APIView):
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
         ser = ExpenseSerializer(data=request.data)
         if ser.is_valid():
-            ser.save()
+            ser.save(USER=request.user)
             return Response(ser.data, status=201)
         return Response(ser.errors, status=400)

@@ -27,3 +27,4 @@ class ExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExpenseModel
         fields = '__all__'
+        read_only_fields = ['USER', 'created_at', 'updated_at']

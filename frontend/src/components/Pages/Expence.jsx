@@ -3,7 +3,7 @@ import { getExpenses, addExpense } from '../Services/api.js'; // Ensure addExpen
 import { Table, Container, Button, Modal, Form, Card, Row, Col, Badge } from 'react-bootstrap';
 import DashboardLayout from '../Layout/DashboardLayout';
 
-function ViewExpence() {
+function Expence() {
     const [expenses, setExpenses] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState({
@@ -159,4 +159,4 @@ function ViewExpence() {
     );
 }
 
-export default ViewExpence;
+export default Expence;

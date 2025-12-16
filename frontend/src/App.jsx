@@ -5,11 +5,11 @@ import './App.css'
 import { Route, Routes } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginPage from './components/Pages/LoginPage'
-import Dash from './components/Pages/Dash'
-import ViewExpence from './components/Pages/ViewExpence'
 import PrivateRoute from './components/PrivateRoute/PrivateRoute'
 import { AuthProvider } from './components/contexts/useAuth'
 import Register from './components/Pages/Register'
+import ViewExpence from './components/Pages/ViewExpence'
+import DashB from './components/Pages/DashB'
 
 function App() {
 
@@ -19,7 +19,7 @@ function App() {
       <Routes>
         <Route path='/' element={<LoginPage />} />
         <Route path='/register' element={<Register />} />
-        <Route path='/dashboard' element={<PrivateRoute><Dash /></PrivateRoute>} />
+        <Route path='/dashboard' element={<PrivateRoute><DashB /></PrivateRoute>} />
         <Route path='/view-expence' element={<PrivateRoute><ViewExpence /></PrivateRoute>} />
       </Routes>
       </AuthProvider>
